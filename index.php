@@ -80,12 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <input type="number" name="studentAge" class="form-control" placeholder="Age" required>
                 </div>
                 <div class="mb-3">
-          <select id="student_course" name="student_course" class="form-select" required>
-            <option value="" disabled selected>Select a course</option>
-            <option value="BSIT">BSIT</option>
-            <option value="BSBA">BSBA</option>
-            <option value="BSHM">BSHM</option>
-          </select>
+                    <input type="text" name="studentCourse" class="form-control" placeholder="Course" required>
                 </div>
                 <div class="mb-3">
                     <input type="email" name="studentEmail" class="form-control" placeholder="Email" required>
