@@ -1,3 +1,62 @@
+<?php
+session_start();
+
+// Clear all session data on initial load
+if (!isset($_SESSION['initialized'])) {
+    $_SESSION['initialized'] = true;
+    $_SESSION['show_results'] = false;
+    $_SESSION['student_first_name'] = '';
+    $_SESSION['student_last_name'] = '';
+    $_SESSION['student_age'] = '';
+    $_SESSION['student_gender'] = '';
+    $_SESSION['student_course'] = '';
+    $_SESSION['student_email'] = '';
+    $_SESSION['grade_prelim'] = '';
+    $_SESSION['grade_midterm'] = '';
+    $_SESSION['grade_finals'] = '';
+    $_SESSION['grade_average'] = '';
+    $_SESSION['grade_status'] = '';
+}
+
+// Handle form submissions
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (isset($_POST['submitStudent'])) {
+        // Store student details in session variables
+        $_SESSION['student_first_name'] = htmlspecialchars(trim($_POST['studentFirstName']));
+        $_SESSION['student_last_name'] = htmlspecialchars(trim($_POST['studentLastName']));
+        $_SESSION['student_age'] = htmlspecialchars(trim($_POST['studentAge']));
+        $_SESSION['student_gender'] = htmlspecialchars(trim($_POST['studentGender']));
+        $_SESSION['student_course'] = htmlspecialchars(trim($_POST['studentCourse']));
+        $_SESSION['student_email'] = htmlspecialchars(trim($_POST['studentEmail']));
+
+        // Hide results display and enable grade form
+        $_SESSION['show_results'] = false;
+        $_SESSION['show_grade_form'] = true;
+    } elseif (isset($_POST['submitGrades'])) {
+        // Retrieve grades
+        $gradePrelim = isset($_POST['gradePrelim']) ? (float)$_POST['gradePrelim'] : 0;
+        $gradeMidterm = isset($_POST['gradeMidterm']) ? (float)$_POST['gradeMidterm'] : 0;
+        $gradeFinals = isset($_POST['gradeFinals']) ? (float)$_POST['gradeFinals'] : 0;
+
+        // Calculate average
+        $gradeAverage = round(($gradePrelim + $gradeMidterm + $gradeFinals) / 3, 2);
+        $gradeStatus = $gradeAverage >= 75 ? "Passed" : "Failed";
+
+        // Store grades and results
+        $_SESSION['grade_prelim'] = $gradePrelim;
+        $_SESSION['grade_midterm'] = $gradeMidterm;
+        $_SESSION['grade_finals'] = $gradeFinals;
+        $_SESSION['grade_average'] = $gradeAverage;
+        $_SESSION['grade_status'] = $gradeStatus;
+
+        // Show results display
+        $_SESSION['show_results'] = true;
+
+        // Reset the grade form flag
+        unset($_SESSION['show_grade_form']);
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
